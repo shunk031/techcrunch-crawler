@@ -75,15 +75,24 @@ class TechcrunchScraper:
         article_dict["url"] = article_url
 
         detail_soup = self._make_soup(article_url)
-        h1_tweet_title = detail_soup.find("h1", {"class": "tweet-title"})
-        title = h1_tweet_title.get_text()
+        try:
+            h1_tweet_title = detail_soup.find("h1", {"class": "tweet-title"})
+            title = h1_tweet_title.get_text()
+        except AttributeError:
+            h1_tweet_title = detail_soup.find("h1")
+            title = h1_tweet_title.get_text()
+
         print("[ DEBUG ] Title: {}".format(title))
         article_dict["title"] = title
 
-        div_article_entry = detail_soup.find("div", {"class": "article-entry"})
-        p_article_texts = div_article_entry.find_all("p")
-        article_content = [p_article_text.get_text() for p_article_text in p_article_texts]
-        article_content = " ".join(article_content)
+        try:
+            div_article_entry = detail_soup.find("div", {"class": "article-entry"})
+            p_article_texts = div_article_entry.find_all("p")
+            article_content = [p_article_text.get_text() for p_article_text in p_article_texts]
+            article_content = " ".join(article_content)
+        except AttributeError:
+            article_content = None
+
         article_dict["article"] = article_content
 
         return article_dict
