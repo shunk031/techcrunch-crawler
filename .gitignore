@@ -1,0 +1,4 @@
+# techcrunch-crawler gitignore
+
+__pycache__/
+*.csv
