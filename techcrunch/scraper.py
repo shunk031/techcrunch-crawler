@@ -5,12 +5,15 @@ from bs4 import BeautifulSoup
 
 import os
 import csv
+import re
 
 try:
     from urllib.request import urlopen
+    from urllib.parse import urlparse, urlunparse
     from urllib.error import HTTPError
 except ImportError:
     from urllib2 import urlopen
+    from urllib2 import urlparse, urlunparse
     from urllib2 import HTTPError
 
 
@@ -38,8 +41,11 @@ class TechcrunchScraper:
 
         article_detail_info = []
         for article_url in article_detail_url_list:
-            article_dict = self.get_article_detail_info_dict(article_url)
-            article_detail_info.append(article_dict)
+            try:
+                article_dict = self.get_article_detail_info_dict(article_url)
+                article_detail_info.append(article_dict)
+            except Exception as e:
+                print(e)
 
         self.save_article_detail_info_list(article_detail_info)
 
@@ -75,14 +81,16 @@ class TechcrunchScraper:
         article_dict["url"] = article_url
 
         detail_soup = self._make_soup(article_url)
+
         try:
             h1_tweet_title = detail_soup.find("h1", {"class": "tweet-title"})
-            title = h1_tweet_title.get_text()
+
         except AttributeError:
             h1_tweet_title = detail_soup.find("h1")
-            title = h1_tweet_title.get_text()
 
+        title = h1_tweet_title.get_text()
         print("[ DEBUG ] Title: {}".format(title))
+
         article_dict["title"] = title
 
         try:
