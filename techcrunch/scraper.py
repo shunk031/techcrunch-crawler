@@ -80,7 +80,7 @@ class TechcrunchScraper:
             else:
                 url = li_river_block.find("a")
                 url = url["href"]
-            print("[ DEBUG ] Get URL: {}".format(url))
+            print("[ GET ] Get URL: {}".format(url))
 
             article_detail_url_list.append(url)
 
@@ -100,7 +100,7 @@ class TechcrunchScraper:
             h1_tweet_title = detail_soup.find("h1")
 
         title = h1_tweet_title.get_text()
-        print("[ DEBUG ] Title: {}".format(title))
+        print("[ GET ] Title: {}".format(title))
 
         article_dict["title"] = title
 
