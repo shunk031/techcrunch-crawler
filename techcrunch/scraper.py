@@ -99,7 +99,7 @@ class TechcrunchScraper:
         except AttributeError:
             h1_tweet_title = detail_soup.find("h1")
 
-        title = h1_tweet_title.get_text()
+        title = h1_tweet_title.get_text().strip()
         print("[ GET ] Title: {}".format(title))
 
         article_dict["title"] = title
@@ -138,4 +138,6 @@ class TechcrunchScraper:
         filename = filename.replace("/", "")
         filename = filename.replace("?", "")
 
+        if len(filename) > 250:
+            filename = filename[:250]
         return filename
