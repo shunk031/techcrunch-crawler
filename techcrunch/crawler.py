@@ -21,7 +21,6 @@ except ImportError:
 class TechcrunchCrawler:
 
     FINISH_CRAWL = "Finish crawl!"
-
     base_url = "https://techcrunch.com/"
 
     def __init__(self, target_url, save_dir="./data", page_count=1):
@@ -31,15 +30,26 @@ class TechcrunchCrawler:
         self.page_count = page_count
 
     def _make_soup(self, url):
-        try:
-            with urlopen(url) as response:
-                html = response.read()
 
-            return BeautifulSoup(html, "lxml")
+        max_retries = 3
+        retries = 0
 
-        except HTTPError as e:
-            print("[ DEBUG ] in {}#make_soup: {}".format(self.__class__.__name__, e))
-            return None
+        while True:
+            try:
+                with urlopen(url) as res:
+                    html = res.read()
+                return BeautifulSoup(html, "lxml")
+
+            except HTTPError as err:
+                print("[ EXCEPTION ] in {}#make_soup: {}".format(self.__class__.__name__, err))
+
+                retries += 1
+                if retries >= max_retries:
+                    raise Exception("Too many retries.")
+
+                wait = 2 ** (retries - 1)
+                print("[ RETRY ] Waiting {} seconds...".format(wait))
+                time.sleep(wait)
 
     def get_next_page_link(self, url):
 
