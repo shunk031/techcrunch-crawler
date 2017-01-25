@@ -59,14 +59,14 @@ class TechcrunchCrawler:
         ol_pagination = soup.find("ol", {"class": "pagination"})
         a_next = ol_pagination.find("li", {"class": "next"}).find("a")
 
-        print("a_next: {}".format(a_next["href"]))
+        # print("a_next: {}".format(a_next["href"]))
 
         if a_next is not None and "href" in a_next.attrs:
             abs_next_page_url = a_next["href"]
             next_page_url = urljoin(self.base_url, abs_next_page_url)
 
             if self.before_url != next_page_url:
-                print("[ DEBUG ] Next article list page: {}".format(url))
+                print("[ PROCESS ] Next article list page: {}".format(url))
                 return next_page_url
 
         return None
@@ -76,7 +76,7 @@ class TechcrunchCrawler:
         try:
             while True:
                 start = time.time()
-                print("[ DEBUG ] Now page {} PROCESSING".format(self.page_count))
+                print("[ PROCESS ] Now page {} PROCESSING".format(self.page_count))
                 scraper = TechcrunchScraper(self.target_url, self.save_dir)
                 scraper.scrap()
                 self.target_url = self.get_next_page_link(self.target_url)
@@ -92,9 +92,9 @@ class TechcrunchCrawler:
                 elapsed_min = elapsed_sec / 60
 
                 if elapsed_min < 1:
-                    print("[ DEBUG ] Elapsed time: {:.2f} [sec]".format(elapsed_sec))
+                    print("[ TIME ] Elapsed time: {:.2f} [sec]".format(elapsed_sec))
                 else:
-                    print("[ DEBUG ] Elapsed time: {:.2f} [min]".format(elapsed_min))
+                    print("[ TIME ] Elapsed time: {:.2f} [min]".format(elapsed_min))
 
         except Exception as e:
 
