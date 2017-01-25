@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import os
 import csv
 import re
+import traceback
 
 try:
     from urllib.request import urlopen
@@ -96,7 +97,8 @@ class TechcrunchScraper:
         try:
             h1_tweet_title = detail_soup.find("h1", {"class": "tweet-title"})
 
-        except AttributeError:
+        except AttributeError as err:
+            traceback.print_tb(err.__traceback__)
             h1_tweet_title = detail_soup.find("h1")
 
         title = h1_tweet_title.get_text().strip()
@@ -109,7 +111,9 @@ class TechcrunchScraper:
             p_article_texts = div_article_entry.find_all("p")
             article_content = [p_article_text.get_text() for p_article_text in p_article_texts]
             article_content = " ".join(article_content)
-        except AttributeError:
+
+        except AttributeError as err:
+            traceback.print_tb(err.__traceback__)
             article_content = None
 
         article_dict["article"] = article_content
