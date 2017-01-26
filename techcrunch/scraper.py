@@ -5,16 +5,14 @@ from bs4 import BeautifulSoup
 
 import os
 import csv
-import re
+import time
 import traceback
 
 try:
     from urllib.request import urlopen
-    from urllib.parse import urlparse, urlunparse
     from urllib.error import HTTPError
 except ImportError:
     from urllib2 import urlopen
-    from urllib2 import urlparse, urlunparse
     from urllib2 import HTTPError
 
 
